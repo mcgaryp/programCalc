@@ -23,23 +23,23 @@ struct Calculations: View {
             }
             // Convert from hex
             // FIXME: Add if statements to present correct conversions
-            Group {
-                Text("Hex to...")
-                TextRow(text: "DEC", number: String(Int("123", radix: 16) ?? -1))
-                TextRow(text: "HEX", number: "123")
-                TextRow(text: "BIN", number: String(Int("123", radix: 16)!, radix: 2))
-            }
-            // Convert from decimal
-            Group {
-                Text("Decimal to...")
-                TextRow(text: "DEC", number: "291")
-                TextRow(text: "HEX", number: String(291, radix: 16))
-                TextRow(text: "BIN", number: String(291, radix: 2))
-            }
+//            Group {
+//                Text("Hex to...")
+//                TextRow(text: "DEC", number: String(Int("123", radix: 16) ?? -1))
+//                TextRow(text: "HEX", number: "123")
+//                TextRow(text: "BIN", number: String(Int("123", radix: 16)!, radix: 2))
+//            }
+//            // Convert from decimal
+//            Group {
+//                Text("Decimal to...")
+//                TextRow(text: "DEC", number: "291")
+//                TextRow(text: "HEX", number: String(291, radix: 16))
+//                TextRow(text: "BIN", number: String(291, radix: 2))
+//            }
             
             // Convert from binary
             Group {
-                Text("Binary to")
+//                Text("Binary to")
                 TextRow(text: "DEC", number: String(Int("100100011", radix: 2)!))
                 TextRow(text: "HEX", number: String(Int("100100011", radix: 2)!, radix: 16))
                 TextRow(text: "BIN", number: "100100011")

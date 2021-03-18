@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Buttons: View {
     @State private var displayString: String = ""
+    @State private var selectedMode:String = CalcMode.bin.rawValue
     
     private let symbolsList: Array<Array<ButtonData>> = [
         [
@@ -49,8 +50,18 @@ struct Buttons: View {
     
     var body: some View {
         VStack {
+            HStack {
+                Spacer()
+                Picker("", selection: $selectedMode) {
+                    ForEach(CalcMode.allCases) { mode in
+                        Text(mode.rawValue.capitalized)
+                    }
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                Spacer()
+            }
             Spacer()
-            Calculations(displayString: displayString)
+            Calculations(displayString: displayString, calculatorMode: CalcMode(rawValue: selectedMode)!)
             Group {
                 ForEach(symbolsList, id: \.self) { symbols in
                     ButtonRow(callback: display, symbols: symbols)
@@ -73,7 +84,104 @@ struct Buttons: View {
     }
     
     func display(action: ButtonAction) {
-        print("Button that was pressed is: \(action)")
+        switch action {
+        case .zero:
+            updateString("0")
+            break
+        case .one:
+            updateString("1")
+            break
+        case .two:
+            updateString("2")
+            break
+        case .three:
+            updateString("3")
+            break
+        case .four:
+            updateString("4")
+            break
+        case .five:
+            updateString("5")
+            break
+        case .six:
+            updateString("6")
+            break
+        case .seven:
+            updateString("7")
+            break
+        case .eight:
+            updateString("8")
+            break
+        case .nine:
+            updateString("9")
+            break
+        case .a:
+            updateString("A")
+            break
+        case .b:
+            updateString("B")
+            break
+        case .c:
+            updateString("C")
+            break
+        case .d:
+            updateString("D")
+            break
+        case .e:
+            updateString("E")
+            break
+        case .f:
+            updateString("F")
+            break
+        case .and:
+            updateString(" & ")
+            break
+        case .or:
+            updateString(" | ")
+            break
+        case .xor:
+            updateString(" ^ ")
+            break
+        case .not:
+            // FIXME: adjust the location of this string added to the array
+            updateString(" ~ ")
+            break
+        case .rightShift:
+            updateString(" >> ")
+            break
+        case .leftShift:
+            updateString(" << ")
+            break
+        case .delete:
+            if !displayString.isEmpty {
+                displayString.removeLast()
+            }
+            break
+        case .multiply:
+            updateString(" \u{00D7} ")
+            break
+        case .divide:
+            updateString(" \u{00F7} ")
+            break
+        case .subtract:
+            updateString(" - ")
+            break
+        case .plus:
+            updateString(" + ")
+            break
+        case .plusMinus:
+            // FIXME: Add a minus to the front of the letter
+            updateString(" -")
+            break
+        case .equals:
+            // FIXME: Do something to signal calculate
+            updateString("\n")
+            break
+        }
+    }
+    
+    func updateString(_ str: String) {
+        displayString += str
     }
 }
 

@@ -39,6 +39,8 @@ enum ButtonAction: Hashable {
     case f
 }
 
-enum CalcMode {
+enum CalcMode: String, CaseIterable, Identifiable {
     case bin, hex, dec
+    
+    var id: String{self.rawValue}
 }

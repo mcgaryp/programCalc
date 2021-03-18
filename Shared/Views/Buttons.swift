@@ -61,7 +61,9 @@ struct Buttons: View {
                 Spacer()
             }
             Spacer()
+            
             Calculations(displayString: displayString, calculatorMode: CalcMode(rawValue: selectedMode)!)
+            
             Group {
                 ForEach(symbolsList, id: \.self) { symbols in
                     ButtonRow(callback: display, symbols: symbols)

@@ -8,9 +8,21 @@
 import SwiftUI
 
 struct Calculations: View {
+    var displayString: String
+    var calculatorMode: CalcMode
+    
     var body: some View {
         VStack {
+            HStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    Text(displayString)
+                }
+                Spacer()
+            }
             // Convert from hex
+            // FIXME: Add if statements to present correct conversions
             Group {
                 Text("Hex to...")
                 TextRow(text: "DEC", number: String(Int("123", radix: 16) ?? -1))
@@ -35,6 +47,8 @@ struct Calculations: View {
         }
         .frame(maxWidth: 500)
     }
+    
+    // TODO: Make functions for calculations
 }
 
 struct TextRow: View {
@@ -55,6 +69,6 @@ struct TextRow: View {
 
 struct Calculations_Previews: PreviewProvider {
     static var previews: some View {
-        Calculations()
+        Calculations(displayString: "1 x 1", calculatorMode: .dec)
     }
 }

@@ -17,7 +17,7 @@ struct Buttons: View {
     ]
     var body: some View {
         VStack {
-//            Calculations()
+            Calculations()
             Spacer()
             ForEach(symbolsList, id: \.self) { symbols in
                 Row(symbols: symbols)
@@ -28,9 +28,7 @@ struct Buttons: View {
                     Spacer()
                     MyButton(symbol: "&")
                     MyButton(symbol: "0")
-                        .background(Color.gray)
                         .frame(width: geometry.size.width * 0.40)
-                        .clipShape(Capsule())
                     MyButton(symbol: "+/-")
                     MyButton(symbol: "=")
                     Spacer()

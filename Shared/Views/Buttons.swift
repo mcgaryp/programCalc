@@ -9,11 +9,11 @@ import SwiftUI
 
 struct Buttons: View {
     private let symbolsList: Array<Array<String>> = [
-        ["LS", "D", "E", "F", "Del"],
-        ["RS", "A", "B", "C", "X"],
-        ["~", "7", "8", "9", "/"],
-        ["^", "4", "5", "6", "-"],
-        ["|", "1", "2", "3", "+"],
+        ["chevron.left.two", "D", "E", "F", "delete.left.fill"],
+        ["chevron.right.two", "A", "B", "C", "multiply"],
+        ["~", "7", "8", "9", "divide"],
+        ["^", "4", "5", "6", "minus"],
+        ["|", "1", "2", "3", "plus"],
     ]
     
     var body: some View {
@@ -31,8 +31,8 @@ struct Buttons: View {
                         MyButton(symbol: "&")
                         MyButton(symbol: "0")
                             .frame(width: geometry.size.width * 0.40)
-                        MyButton(symbol: "+/-")
-                        MyButton(symbol: "=")
+                        MyButton(symbol: "plus.slash.minus")
+                        MyButton(symbol: "equal")
                         Spacer()
                     }
                 }

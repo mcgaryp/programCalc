@@ -15,24 +15,29 @@ struct Buttons: View {
         ["^", "4", "5", "6", "-"],
         ["|", "1", "2", "3", "+"],
     ]
+    
     var body: some View {
         VStack {
-            Calculations()
             Spacer()
-            ForEach(symbolsList, id: \.self) { symbols in
-                Row(symbols: symbols)
-            }
-            
-            GeometryReader { geometry in
-                HStack(spacing: 3) {
-                    Spacer()
-                    MyButton(symbol: "&")
-                    MyButton(symbol: "0")
-                        .frame(width: geometry.size.width * 0.40)
-                    MyButton(symbol: "+/-")
-                    MyButton(symbol: "=")
-                    Spacer()
+            Calculations()
+            Group {
+                ForEach(symbolsList, id: \.self) { symbols in
+                    Row(symbols: symbols)
                 }
+                
+                GeometryReader { geometry in
+                    HStack(spacing: 3) {
+                        Spacer()
+                        MyButton(symbol: "&")
+                        MyButton(symbol: "0")
+                            .frame(width: geometry.size.width * 0.40)
+                        MyButton(symbol: "+/-")
+                        MyButton(symbol: "=")
+                        Spacer()
+                    }
+                    .frame(maxWidth: 500)
+                }
+                .frame(height: 50)
             }
         }
     }
@@ -48,6 +53,7 @@ struct Row: View {
             }
             Spacer()
         }
+        .frame(maxWidth: 500)
     }
 }
 

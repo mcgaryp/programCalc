@@ -22,7 +22,7 @@ struct Buttons: View {
             Calculations()
             Group {
                 ForEach(symbolsList, id: \.self) { symbols in
-                    Row(symbols: symbols)
+                    ButtonRow(symbols: symbols)
                 }
                 
                 GeometryReader { geometry in
@@ -35,15 +35,15 @@ struct Buttons: View {
                         MyButton(symbol: "=")
                         Spacer()
                     }
-                    .frame(maxWidth: 500)
                 }
-                .frame(height: 50)
+                .frame(maxWidth: 500)
+                .frame(height: 70)
             }
         }
     }
 }
 
-struct Row: View {
+struct ButtonRow: View {
     var symbols: Array<String>
     var body: some View {
         HStack(spacing: 3) {

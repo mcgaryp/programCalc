@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct Buttons: View {
-    @State private var displayString: String = ""
+struct Calculator: View {
+    @StateObject private var display: Conversions = Conversions()
     @State private var selectedMode:String = CalcMode.bin.rawValue
     
     private let symbolsList: Array<Array<ButtonData>> = [
@@ -62,7 +62,7 @@ struct Buttons: View {
             }
             Spacer()
             
-            Calculations(displayString: displayString, calculatorMode: CalcMode(rawValue: selectedMode)!)
+            EquationDisplay(display: display, calculatorMode: CalcMode(rawValue: selectedMode)!)
             
             Group {
                 ForEach(symbolsList, id: \.self) { symbols in
@@ -155,8 +155,8 @@ struct Buttons: View {
             updateString(" << ")
             break
         case .delete:
-            if !displayString.isEmpty {
-                displayString.removeLast()
+            if !display.displayString.isEmpty {
+                display.displayString.removeLast()
             }
             break
         case .multiply:
@@ -183,7 +183,7 @@ struct Buttons: View {
     }
     
     func updateString(_ str: String) {
-        displayString += str
+        display.updateDisplayString(str, mode: CalcMode(rawValue: selectedMode)!)
     }
 }
 
@@ -242,6 +242,6 @@ struct ButtonData: Hashable {
 
 struct Buttons_Previews: PreviewProvider {
     static var previews: some View {
-        Buttons()
+        Calculator()
     }
 }

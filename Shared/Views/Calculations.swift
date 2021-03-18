@@ -10,9 +10,45 @@ import SwiftUI
 struct Calculations: View {
     var body: some View {
         VStack {
-            Text("BIN")
-            Text("HEX")
-            Text("DEC")
+            // Convert from hex
+            Group {
+                Text("Hex to...")
+                TextRow(text: "DEC", number: String(Int("123", radix: 16) ?? -1))
+                TextRow(text: "HEX", number: "123")
+                TextRow(text: "BIN", number: String(Int("123", radix: 16)!, radix: 2))
+            }
+            // Convert from decimal
+            Group {
+                Text("Decimal to...")
+                TextRow(text: "DEC", number: "291")
+                TextRow(text: "HEX", number: String(291, radix: 16))
+                TextRow(text: "BIN", number: String(291, radix: 2))
+            }
+            
+            // Convert from binary
+            Group {
+                Text("Binary to")
+                TextRow(text: "DEC", number: String(Int("100100011", radix: 2)!))
+                TextRow(text: "HEX", number: String(Int("100100011", radix: 2)!, radix: 16))
+                TextRow(text: "BIN", number: "100100011")
+            }
+        }
+        .frame(maxWidth: 500)
+    }
+}
+
+struct TextRow: View {
+    var text: String
+    var number: String
+    var body: some View {
+        HStack {
+            Spacer()
+            HStack {
+                Text(text)
+                Spacer()
+                Text(number)
+            }
+            Spacer()
         }
     }
 }

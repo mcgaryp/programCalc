@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ButtonAction: Hashable {
+enum ButtonAction: CaseIterable, Hashable {
     case leftShift
     case rightShift
     case not
@@ -37,6 +37,26 @@ enum ButtonAction: Hashable {
     case d
     case e
     case f
+    
+    static var allCases: [ButtonAction] {
+        return [.zero, .one, .two, .three, .four, .five, .six, .seven, .eight, .nine, .a, .b, .c, .d, .e, .f]
+    }
+    
+    static var twoThroughF: [ButtonAction] {
+        return [.two, .three, .four, .five, .six, .seven, .eight, .nine, .a, .b, .c, .d, .e, .f]
+    }
+    
+    static var aThroughF: [ButtonAction] {
+        return [.a, .b, .c, .d, .e, .f]
+    }
+    
+    static var twoThroughNine: [ButtonAction] {
+        return [.two, .three, .four, .five, .six, .seven, .eight, .nine]
+    }
+}
+
+enum ButtonType {
+    case symbol, number
 }
 
 enum CalcMode: String, CaseIterable, Identifiable {

@@ -23,6 +23,8 @@
 		618845502603E8CD001BEE7B /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6188454E2603E8CD001BEE7B /* Enums.swift */; };
 		6188456E2604115D001BEE7B /* Conversions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6188456D2604115D001BEE7B /* Conversions.swift */; };
 		6188456F2604115D001BEE7B /* Conversions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6188456D2604115D001BEE7B /* Conversions.swift */; };
+		6188457D26041C55001BEE7B /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6188457C26041C55001BEE7B /* Buttons.swift */; };
+		6188457E26041C55001BEE7B /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6188457C26041C55001BEE7B /* Buttons.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +64,7 @@
 		6188453A2603CEF7001BEE7B /* EquationDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquationDisplay.swift; sourceTree = "<group>"; };
 		6188454E2603E8CD001BEE7B /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		6188456D2604115D001BEE7B /* Conversions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversions.swift; sourceTree = "<group>"; };
+		6188457C26041C55001BEE7B /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,6 +184,7 @@
 			children = (
 				6188454E2603E8CD001BEE7B /* Enums.swift */,
 				6188456D2604115D001BEE7B /* Conversions.swift */,
+				6188457C26041C55001BEE7B /* Buttons.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -363,6 +367,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6188457D26041C55001BEE7B /* Buttons.swift in Sources */,
 				616B4DA92602FEC800F2F8DF /* Calculator.swift in Sources */,
 				616B4D912602FE9800F2F8DF /* ContentView.swift in Sources */,
 				6188454F2603E8CD001BEE7B /* Enums.swift in Sources */,
@@ -376,6 +381,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6188457E26041C55001BEE7B /* Buttons.swift in Sources */,
 				616B4DAA2602FEC800F2F8DF /* Calculator.swift in Sources */,
 				616B4D922602FE9800F2F8DF /* ContentView.swift in Sources */,
 				618845502603E8CD001BEE7B /* Enums.swift in Sources */,

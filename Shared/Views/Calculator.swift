@@ -9,44 +9,8 @@ import SwiftUI
 
 struct Calculator: View {
     @StateObject private var display: Conversions = Conversions()
-    @State private var selectedMode:String = CalcMode.bin.rawValue
-    
-    private let symbolsList: Array<Array<ButtonData>> = [
-        [
-            ButtonData("chevron.left.2", .leftShift),
-            ButtonData("D", .d),
-            ButtonData("E", .e),
-            ButtonData("F", .f),
-            ButtonData("delete.left.fill", .delete)],
-        [
-            ButtonData("chevron.right.2", .rightShift),
-            ButtonData("A", .a),
-            ButtonData("B", .b),
-            ButtonData("C", .c),
-            ButtonData("multiply", .multiply)
-        ],
-        [
-            ButtonData("~", .not),
-            ButtonData("7", .seven),
-            ButtonData("8", .eight),
-            ButtonData("9", .nine),
-            ButtonData("divide", .divide)
-        ],
-        [
-            ButtonData("^", .xor),
-            ButtonData("4", .four),
-            ButtonData("5", .five),
-            ButtonData("6", .six),
-            ButtonData("minus", .subtract)
-        ],
-        [
-            ButtonData("|", .or),
-            ButtonData("1", .one),
-            ButtonData("2", .two),
-            ButtonData("3", .three),
-            ButtonData("plus", .plus)
-        ],
-    ]
+    @ObservedObject private var buttons: MyButtons = MyButtons()
+    @State private var selectedMode:String = CalcMode.hex.rawValue
     
     var body: some View {
         VStack {
@@ -57,6 +21,10 @@ struct Calculator: View {
                         Text(mode.rawValue.capitalized)
                     }
                 }
+                .onChange(of: selectedMode) { (value) in
+                    buttons.objectWillChange.send()
+                    updateButtons(value: CalcMode(rawValue: value)!)
+                }
                 .pickerStyle(SegmentedPickerStyle())
                 Spacer()
             }
@@ -65,17 +33,17 @@ struct Calculator: View {
             EquationDisplay(display: display, calculatorMode: CalcMode(rawValue: selectedMode)!)
             
             Group {
-                ForEach(symbolsList, id: \.self) { symbols in
-                    ButtonRow(callback: display, symbols: symbols)
+                ForEach(buttons.buttons) { group in
+                    ButtonRow(callback: display, group: group)
                 }
                 
                 GeometryReader { geometry in
                     HStack(spacing: 3) {
                         Spacer()
-                        MyButton(callback: display, data: ButtonData("&", .and))
-                        MyButton(callback: display, data: ButtonData("0", .zero))                            .frame(width: geometry.size.width * 0.37)
-                        MyButton(callback: display, data: ButtonData("plus.slash.minus", .plusMinus))
-                        MyButton(callback: display, data: ButtonData("equal", .equals))
+                        MyButton(callback: display, button: ButtonState("&", .and, .symbol, false))
+                        MyButton(callback: display, button: ButtonState("0", .zero, .number, false))                            .frame(width: geometry.size.width * 0.37)
+                        MyButton(callback: display, button: ButtonState("plus.slash.minus", .plusMinus, .symbol, false))
+                        MyButton(callback: display, button: ButtonState("equal", .equals, .symbol, false))
                         Spacer()
                     }
                 }
@@ -85,7 +53,47 @@ struct Calculator: View {
         }
     }
     
-    func display(action: ButtonAction) {
+    /// Enable or disable the buttons as the value changes
+    func updateButtons(value: CalcMode) -> Void {
+        switch value {
+        case .bin:
+            /// Disabling 2-F
+            for group in buttons.buttons {
+                for button in group.group {
+                    if ButtonAction.twoThroughF.contains(button.action) {
+                        button.updateDisabled(val: true)
+                    }
+                }
+            }
+            break
+        case .hex:
+            /// Enabling all
+            for group in buttons.buttons {
+                for button in group.group {
+                    if ButtonAction.allCases.contains(button.action) {
+                        button.updateDisabled(val: false)
+                    }
+                }
+            }
+            break
+        case .dec:
+            for group in buttons.buttons {
+                for button in group.group {
+                    /// Enabling 2-9
+                    if ButtonAction.twoThroughNine.contains(button.action) {
+                        button.updateDisabled(val: false)
+                    }
+                    /// Disabliing A-F
+                    if ButtonAction.aThroughF.contains(button.action) {
+                        button.updateDisabled(val: true)
+                    }
+                }
+            }
+            break
+        }
+    }
+    
+    func display(action: ButtonAction) -> Void {
         switch action {
         case .zero:
             updateString("0")
@@ -142,17 +150,17 @@ struct Calculator: View {
             updateString(" | ")
             break
         case .xor:
-            updateString(" ^ ")
+            updateString(" \u{22C0} ")
             break
         case .not:
             // FIXME: adjust the location of this string added to the array
             updateString(" ~ ")
             break
         case .rightShift:
-            updateString(" >> ")
+            updateString(" \u{00BB} ")
             break
         case .leftShift:
-            updateString(" << ")
+            updateString(" \u{00AB} ")
             break
         case .delete:
             if !display.displayString.isEmpty {
@@ -189,12 +197,12 @@ struct Calculator: View {
 
 struct ButtonRow: View {
     var callback: (ButtonAction) -> Void
-    var symbols: Array<ButtonData>
+    var group: ButtonGroup
     var body: some View {
         HStack(spacing: 3) {
             Spacer()
-            ForEach(symbols, id: \.self) { data in
-                MyButton(callback: callback, data: data)
+            ForEach(group.group) { button in
+                MyButton(callback: callback, button: button)
             }
             Spacer()
         }
@@ -204,39 +212,64 @@ struct ButtonRow: View {
 
 struct MyButton: View {
     var callback: (ButtonAction) -> Void
-    var data: ButtonData
+    var button: ButtonState
     var body: some View {
-        Button(action: { callback(data.action) }, label: {
-            if data.text.count < 3 {
-                Text(data.text)
+        let number: Color = Color.black
+        let symbol: Color = Color.orange
+        let disabled: Color = Color.gray
+        
+        var buttonColor: Color = Color.white
+        switch button.type {
+        case .number:
+            buttonColor = number
+        case .symbol:
+            buttonColor = symbol
+        }
+        
+        if button.disabled {
+            buttonColor = disabled
+        }
+        
+        return Button(action: { callback(button.action) }, label: {
+            if button.text.count < 4 {
+                Text(button.text)
                     .foregroundColor(.white)
                     .font(.system(size: 20))
                     .minimumScaleFactor(0.001)
                     .frame(maxWidth: .infinity, minHeight: 25)
                     .padding()
-                    .background(Color.gray)
+                    .background(buttonColor)
                     .clipShape(Capsule())
             } else {
-                Image(systemName: data.text)
+                Image(systemName: button.text)
                     .foregroundColor(.white)
                     .font(.system(size: 20))
                     .minimumScaleFactor(0.001)
                     .frame(maxWidth: .infinity, minHeight: 25)
                     .padding()
-                    .background(Color.gray)
+                    .background(buttonColor)
                     .clipShape(Capsule())
             }
         })
+        .disabled(button.disabled)
     }
 }
 
 struct ButtonData: Hashable {
-    var text: String
-    var action: ButtonAction
+    var disabled: Bool
+    let text: String
+    let action: ButtonAction
+    let type: ButtonType
     
-    init(_ text: String, _ action: ButtonAction) {
+    init(_ text: String, _ action: ButtonAction, _ type: ButtonType, _ disabled: Bool) {
         self.text = text
         self.action = action
+        self.disabled = disabled
+        self.type = type
+    }
+    
+    mutating func updateDisabled(b: Bool) {
+        disabled = b
     }
 }
 

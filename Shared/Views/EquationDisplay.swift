@@ -17,7 +17,9 @@ struct EquationDisplay: View {
                 Spacer()
                 HStack {
                     Spacer()
+                    /// TODO add a clear button
                     Text(display.displayString)
+                        
                 }
                 Spacer()
             }
@@ -28,6 +30,8 @@ struct EquationDisplay: View {
         }
         .frame(maxWidth: 500)
     }
+    
+    /// TODO: Create functions to interpret the displaystring and do calculations
 }
 
 struct TextRow: View {

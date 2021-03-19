@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct EquationDisplay: View {
+    @Namespace var bottomId
     @ObservedObject var display: Conversions
     var calculatorMode: CalcMode
     
@@ -15,12 +16,36 @@ struct EquationDisplay: View {
         VStack {
             HStack {
                 Spacer()
-                HStack {
-                    Spacer()
-                    /// TODO add a clear button
-                    Text(display.displayString)
-                        
+                GeometryReader { geometry in
+                    ScrollView {
+                        ScrollViewReader { scroll in
+                            VStack {
+                                Spacer()
+                                ForEach(display.userHistory, id: \.self) { entry in
+                                    Text(entry.equation)
+                                        .multilineTextAlignment(.trailing)
+                                        .foregroundColor(.black)
+                                        .padding(.horizontal)
+                                        .padding(.bottom)
+                                        .frame(width: geometry.size.width, alignment: .bottomTrailing)
+                                }
+                                .onChange(of: display.userHistory, perform: { _ in
+                                    scroll.scrollTo(bottomId)
+                                })
+                                Text(display.userInput)
+                                    .multilineTextAlignment(.trailing)
+                                    .foregroundColor(.black)
+                                    .padding(.horizontal)
+                                    .padding(.bottom)
+                                    .frame(width: geometry.size.width, alignment: .bottomTrailing)
+                                    .id(bottomId)
+                            }
+                        }
+                        .frame(minHeight: geometry.size.height)
+                    }
+                    .background(Color.white)
                 }
+//                .border(Color.black, width: 2)
                 Spacer()
             }
             // The conversions

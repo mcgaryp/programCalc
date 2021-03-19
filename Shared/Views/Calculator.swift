@@ -13,26 +13,27 @@ struct Calculator: View {
     @State private var selectedMode:String = CalcMode.hex.rawValue
     
     var body: some View {
-        VStack {
-            HStack {
-                Spacer()
-                Picker("", selection: $selectedMode) {
-                    ForEach(CalcMode.allCases) { mode in
-                        Text(mode.rawValue.capitalized)
+        ZStack {
+            Color.gray
+                .ignoresSafeArea()
+            VStack {
+                HStack(spacing: 3) {
+                    Spacer()
+                    Picker("", selection: $selectedMode) {
+                        ForEach(CalcMode.allCases) { mode in
+                            Text(mode.rawValue.capitalized)
+                        }
                     }
+                    .onChange(of: selectedMode) { (value) in
+                        buttons.objectWillChange.send()
+                        updateButtons(value: CalcMode(rawValue: value)!)
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    Spacer()
                 }
-                .onChange(of: selectedMode) { (value) in
-                    buttons.objectWillChange.send()
-                    updateButtons(value: CalcMode(rawValue: value)!)
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                Spacer()
-            }
-            Spacer()
-            
-            EquationDisplay(display: display, calculatorMode: CalcMode(rawValue: selectedMode)!)
-            
-            Group {
+                
+                EquationDisplay(display: display, calculatorMode: CalcMode(rawValue: selectedMode)!)
+                
                 ForEach(buttons.buttons) { group in
                     ButtonRow(callback: display, group: group)
                 }
@@ -94,6 +95,7 @@ struct Calculator: View {
     }
     
     func display(action: ButtonAction) -> Void {
+        display.objectWillChange.send()
         switch action {
         case .zero:
             updateString("0")
@@ -163,8 +165,8 @@ struct Calculator: View {
             updateString(" \u{00AB} ")
             break
         case .delete:
-            if !display.displayString.isEmpty {
-                display.displayString.removeLast()
+            if !display.userInput.isEmpty {
+                display.userInput.removeLast()
             }
             break
         case .multiply:

@@ -8,10 +8,27 @@
 import Foundation
 
 class Conversions: ObservableObject {
-    @Published var displayString: String = ""
+    @Published var userHistory: Array<Entry> = []
+    @Published var userInput: String = ""
     @Published var bin: String
     @Published var hex: String
     @Published var dec: String
+    private var answer: String = "0"
+    
+    struct Entry: Identifiable, Hashable {
+        var id: UUID
+        var equation: String
+        
+        init(_ e: String) {
+            equation = e
+            id = UUID()
+        }
+        
+        func getEquation() -> String {
+            return self.equation
+        }
+    
+    }
     
     init() {
         bin = "0"
@@ -20,12 +37,25 @@ class Conversions: ObservableObject {
     }
     
     func updateDisplayString(_ str: String, mode: CalcMode) -> Void {
-        displayString += str
-        convert(mode)
+        userInput += str
+        if userInput.last == "\n" {
+            // TODO: restructure the string for operations.
+            // TODO: algorithm to decifer the string There needs to be a function for each operator <<, >>, ~, -, ^, |, &, x, /, +, -, -/+, =
+            // TODO: Add anser to user input
+            answer = calculate()
+            userInput += "= \(answer)"
+            // Add to history
+            userHistory.append(Entry(userInput))
+            // reset the user input
+            userInput = ""
+        }
+    }
+    
+    func calculate() -> String {
+        return "ANSWER HERE"
     }
     
     func convert(_ mode: CalcMode) -> Void {
-        print("Converting in \(mode)")
         switch mode {
         case .bin:
             binTo()

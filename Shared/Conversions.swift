@@ -139,15 +139,18 @@ class Conversions: ObservableObject {
     
     // TODO: The math is only for dec... so no other operations work yet like bin or hex
     func doTheDecMath(_ operators: Array<OperatorType>, _ numbers: Array<Int>) -> String {
-        // take the first and the second and
+        // take the lhs of the operations and the operations index
         var lhs = -1
         var operatorIndex = -1
+        // loop through the numbers
         numbers.forEach({ number in
             if operatorIndex < 0 {
+                // first time through the loop set the number to the lhs
                 lhs = number
+                // lets start to look at the operators after this loop
                 operatorIndex = 0
             } else {
-                print(lhs, operators[operatorIndex])
+                // what is the operator? go to the right function.
                 switch operators[operatorIndex] {
                 case .add:
                     // Add function

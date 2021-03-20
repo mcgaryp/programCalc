@@ -20,7 +20,7 @@ enum ButtonAction: CaseIterable, Hashable {
     case subtract
     case plus
     case equals
-    case plusMinus
+    case clear
     case zero
     case one
     case two
@@ -63,4 +63,17 @@ enum CalcMode: String, CaseIterable, Identifiable {
     case bin, hex, dec
     
     var id: String{self.rawValue}
+}
+
+enum OperatorType {
+    case shiftLeft
+    case shiftRight
+    case inverse
+    case xor
+    case or
+    case and
+    case multiply
+    case divide
+    case subtract
+    case add
 }

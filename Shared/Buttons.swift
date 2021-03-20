@@ -17,35 +17,35 @@ class MyButtons: ObservableObject {
                 ButtonState("D", .d, .number, false),
                 ButtonState("E", .e, .number, false),
                 ButtonState("F", .f, .number, false),
-                ButtonState("delete.left.fill", .delete, .symbol, false)
+                ButtonState("trash", .clear, .symbol, false)
             ]),
             ButtonGroup([
                 ButtonState("chevron.right.2", .rightShift, .symbol, false),
                 ButtonState("A", .a, .number, false),
                 ButtonState("B", .b, .number, false),
                 ButtonState("C", .c, .number, false),
-                ButtonState("multiply", .multiply, .symbol, false)
+                ButtonState("delete.left.fill", .delete, .symbol, false)
             ]),
             ButtonGroup([
                 ButtonState("~", .not, .symbol, false),
                 ButtonState("7", .seven, .number, false),
                 ButtonState("8", .eight, .number, false),
                 ButtonState("9", .nine, .number, false),
-                ButtonState("divide", .divide, .symbol, false)
+                ButtonState("multiply", .multiply, .symbol, false)
             ]),
             ButtonGroup([
                 ButtonState("\u{22C0}", .xor, .symbol, false),
                 ButtonState("4", .four, .number, false),
                 ButtonState("5", .five, .number, false),
                 ButtonState("6", .six, .number, false),
-                ButtonState("minus", .subtract, .symbol, false)
+                ButtonState("divide", .divide, .symbol, false)
             ]),
             ButtonGroup([
                 ButtonState("|", .or, .symbol, false),
                 ButtonState("1", .one, .number, false),
                 ButtonState("2", .two, .number, false),
                 ButtonState("3", .three, .number, false),
-                ButtonState("plus", .plus, .symbol, false)
+                ButtonState("minus", .subtract, .symbol, false)
             ]),
         ]
     }

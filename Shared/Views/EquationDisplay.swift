@@ -44,8 +44,8 @@ struct EquationDisplay: View {
                         .frame(minHeight: geometry.size.height)
                     }
                     .background(Color.white)
+                    .cornerRadius(20)
                 }
-//                .border(Color.black, width: 2)
                 Spacer()
             }
             // The conversions
@@ -67,8 +67,10 @@ struct TextRow: View {
             Spacer()
             HStack {
                 Text(text)
+                    .foregroundColor(.white)
                 Spacer()
                 Text(number)
+                    .foregroundColor(.white)
             }
             Spacer()
         }
@@ -77,6 +79,9 @@ struct TextRow: View {
 
 struct Calculations_Previews: PreviewProvider {
     static var previews: some View {
-        EquationDisplay(display: Conversions(), calculatorMode: .dec)
+        ZStack {
+            Color.gray.ignoresSafeArea()
+            EquationDisplay(display: Conversions(), calculatorMode: .dec)
+        }
     }
 }

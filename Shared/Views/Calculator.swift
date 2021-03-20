@@ -14,7 +14,7 @@ struct Calculator: View {
     
     var body: some View {
         ZStack {
-            Color.gray
+            Color.cadet
                 .ignoresSafeArea()
             VStack {
                 HStack(spacing: 3) {
@@ -42,9 +42,10 @@ struct Calculator: View {
                     HStack(spacing: 3) {
                         Spacer()
                         MyButton(callback: display, button: ButtonState("&", .and, .symbol, false))
-                        MyButton(callback: display, button: ButtonState("0", .zero, .number, false))                            .frame(width: geometry.size.width * 0.37)
-                        MyButton(callback: display, button: ButtonState("plus.slash.minus", .plusMinus, .symbol, false))
+                        MyButton(callback: display, button: ButtonState("0", .zero, .number, false))
+                            .frame(width: geometry.size.width * 0.37)
                         MyButton(callback: display, button: ButtonState("equal", .equals, .symbol, false))
+                        MyButton(callback: display, button: ButtonState("plus", .plus, .symbol, false))
                         Spacer()
                     }
                 }
@@ -165,9 +166,7 @@ struct Calculator: View {
             updateString(" \u{00AB} ")
             break
         case .delete:
-            if !display.userInput.isEmpty {
-                display.userInput.removeLast()
-            }
+            display.backspace()
             break
         case .multiply:
             updateString(" \u{00D7} ")
@@ -181,9 +180,8 @@ struct Calculator: View {
         case .plus:
             updateString(" + ")
             break
-        case .plusMinus:
-            // FIXME: Add a minus to the front of the letter
-            updateString(" -")
+        case .clear:
+            display.resetInput()
             break
         case .equals:
             // FIXME: Do something to signal calculate
@@ -216,9 +214,9 @@ struct MyButton: View {
     var callback: (ButtonAction) -> Void
     var button: ButtonState
     var body: some View {
-        let number: Color = Color.black
-        let symbol: Color = Color.orange
-        let disabled: Color = Color.gray
+        let number: Color = Color.charcoal
+        let symbol: Color = Color.bloodRed
+        let disabled: Color = Color.charcoal.opacity(0.5)
         
         var buttonColor: Color = Color.white
         switch button.type {
@@ -235,6 +233,7 @@ struct MyButton: View {
         return Button(action: { callback(button.action) }, label: {
             if button.text.count < 4 {
                 Text(button.text)
+                    .opacity(button.disabled ? 0.5 : 1)
                     .foregroundColor(.white)
                     .font(.system(size: 20))
                     .minimumScaleFactor(0.001)
@@ -244,6 +243,7 @@ struct MyButton: View {
                     .clipShape(Capsule())
             } else {
                 Image(systemName: button.text)
+                    .opacity(button.disabled ? 0.5 : 1)
                     .foregroundColor(.white)
                     .font(.system(size: 20))
                     .minimumScaleFactor(0.001)
@@ -278,5 +278,6 @@ struct ButtonData: Hashable {
 struct Buttons_Previews: PreviewProvider {
     static var previews: some View {
         Calculator()
+            .preferredColorScheme(.dark)
     }
 }

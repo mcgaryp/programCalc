@@ -8,36 +8,47 @@
 import Foundation
 
 class Conversions: ObservableObject {
+    // Array of past values and calculations of the user
     @Published var userHistory: Array<Entry> = []
+    // Current input and calculation determined by the user
     @Published var userInput: String = ""
+    // values displayed of the answer in hex, dec, or binary
     @Published var bin: String
     @Published var hex: String
     @Published var dec: String
+    // Calculated answer
     private var answer: String = ""
     
+    // The entry of the user history
     struct Entry: Identifiable, Hashable {
         var id: UUID
-        var equation: String
+        var equation: String // current format "1+2\n=3"
+        // TODO: answer string?
         
+        // Init for structure
         init(_ e: String) {
             equation = e
             id = UUID()
         }
         
+        // Get function
         func getEquation() -> String {
             return self.equation
         }
     
     }
     
+    // Initializer for class
     init() {
         bin = "0"
         hex = "0"
         dec = "0"
     }
     
+    // Update string of the current equation the user is creating
     func updateDisplayString(_ str: String, mode: CalcMode) -> Void {
         userInput += str
+        // if the user selects = operator
         if userInput.last == "\n" {
             // Calculate the input
             answer = calculate(mode)
@@ -75,16 +86,18 @@ class Conversions: ObservableObject {
     
     // Calculate what the awnser is right here
     func calculate(_ mode: CalcMode) -> String {
+        // TODO: Check for valid equation
+        
         // Numbers array and operators array
         var numbers: Array<Int> = []
         var operators: Array<OperatorType> = []
         // separate the operators from the numbers
-        let temp = userInput
-        let trimmed = temp.replacingOccurrences(of: "\n", with: "")
-        let operatorsAndNumbers = trimmed.split(separator: " ")
+        let temp = userInput // "1 + 2 \n"
+        let trimmed = temp.replacingOccurrences(of: "\n", with: "") // "1 + 2"
+        let operatorsAndNumbers = trimmed.split(separator: " ") // ["1", "+" ,"2"]
         // Do the simple conversions
-        operatorsAndNumbers.forEach({ on in
-            let number = Int(on) ?? nil
+        operatorsAndNumbers.forEach({ on in // Operator or Number = on -> string value
+            let number = Int(on) ?? nil // if the on is a number then save the number else make it null
             // if a number then add to numbers
             if number != nil {
                 numbers.append(number!)
@@ -130,9 +143,9 @@ class Conversions: ObservableObject {
         switch mode {
         case .dec:
             return doTheDecMath(operators, numbers)
-        case .bin: // TODO:
+        case .bin: // TODO: binary calc
             return "0"
-        case .hex: // TODO:
+        case .hex: // TODO: hex calc
             return "0"
         }
     }
@@ -143,7 +156,7 @@ class Conversions: ObservableObject {
         var lhs = -1
         var operatorIndex = -1
         // loop through the numbers
-        numbers.forEach({ number in
+        numbers.forEach({ number in // [1, 2] [+]
             if operatorIndex < 0 {
                 // first time through the loop set the number to the lhs
                 lhs = number
@@ -170,6 +183,7 @@ class Conversions: ObservableObject {
                     break
                 case .inverse:
                     // TODO: Inverse function
+                    lhs = ~lhs
                     break
                 case .or:
                     // Or function
@@ -215,7 +229,7 @@ class Conversions: ObservableObject {
     
     func hexTo() {
         bin = String(Int(answer, radix: 16) ?? -1, radix: 2)
-        dec = String(Int(answer, radix: 16) ?? -1)
+        dec = String(Int64(answer, radix: 16) ?? -1)
         hex = answer
     }
     
@@ -227,7 +241,7 @@ class Conversions: ObservableObject {
     
     func decTo() {
         hex = String(Int(answer) ?? -1, radix: 16)
-        bin = String(Int(answer) ?? -1, radix: 2)
+        bin = String(Int64(answer) ?? -1, radix: 2)
         dec = answer
     }
 }

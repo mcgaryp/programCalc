@@ -53,6 +53,10 @@ enum ButtonAction: CaseIterable, Hashable {
     static var twoThroughNine: [ButtonAction] {
         return [.two, .three, .four, .five, .six, .seven, .eight, .nine]
     }
+    
+    static var operators: [ButtonAction] {
+        return [.leftShift, .rightShift, .not, .xor, .or, .and, .delete, .multiply, .divide, .subtract, .plus, .equals]
+    }
 }
 
 enum ButtonType {

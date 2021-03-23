@@ -7,13 +7,6 @@
 
 import SwiftUI
 
-// TODO: Calculate Negative values in hex and binary display properly
-// TODO: Division... this need to be float conversions
-// TODO: Add decimal (point button)?
-// TODO: Add clear history
-// TODO: Not (inverse) operator, How to display this properly
-// TODO: Color red in light mode needs to be different tint... too bright
-// FIXME: Subtract only a charcter from a number
 // TODO: Check for not cool equations, equations that don't make sense 1++3, 1/3-, and so on ERROR CHECKING
 
 struct Calculator: View {
@@ -105,7 +98,7 @@ struct Calculator: View {
         }
     }
     
-    // FIXME: Send Button Action to update string?
+    // Update the display from user input
     func display(action: ButtonAction) -> Void {
         display.objectWillChange.send()
         switch action {
@@ -167,7 +160,6 @@ struct Calculator: View {
             updateString(" \u{22C0} ")
             break
         case .not:
-            // FIXME: adjust the location of this string added to the array
             updateString(" ~ ")
             break
         case .rightShift:
@@ -196,6 +188,9 @@ struct Calculator: View {
             break
         case .equals:
             updateString("\n")
+            break
+        case .decimal:
+            updateString(".")
             break
         }
     }

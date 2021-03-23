@@ -16,6 +16,7 @@ class Conversions: ObservableObject {
     @Published var bin: String
     @Published var hex: String
     @Published var dec: String
+    // Boolean used to tell if the user is in the middle of a calculation
     @Published var inCalculation: Bool = false
     // Calculated answer
     private var answer: String = ""
@@ -51,12 +52,17 @@ class Conversions: ObservableObject {
         userInput += str
         // if the user selects = operator
         if userInput.last == "\n" {
+            // the user only entered equals... do nothing
+            if userInput.count == 1 {
+                resetInput()
+                return
+            }
             // Calculate the input
             answer = calculate(mode)
             // convert the answer
             convert(mode)
             // update the input
-            userInput += "= \(answer)"
+            userInput += answer != "-1" ? "= \(answer)" : "ERROR"
             // Add to history
             userHistory.append(Entry(userInput))
             // reset the user input
@@ -65,6 +71,14 @@ class Conversions: ObservableObject {
         checkLengthOfInput()
     }
     
+    func clearHistory() {
+        userHistory.removeAll(keepingCapacity: false)
+        dec = "0"
+        hex = "0"
+        bin = "0"
+    }
+    
+    // Checks the length of the input string to let the calculation in display or not
     func checkLengthOfInput() {
         if userInput.isEmpty {
             inCalculation = false
@@ -83,10 +97,34 @@ class Conversions: ObservableObject {
         let temp = userInput
         // split the string
         var splitTemp = temp.split(separator: " ")
-        // remove the last part
-        splitTemp.removeLast()
+        // check if last is a symbol or a number
+        if var last = splitTemp.last {
+            if let o = symbolToOperator(String(last)) {
+                if ButtonAction.operators.contains(o) {
+                    // remove the item
+                    splitTemp.removeLast()
+                }
+            } else {
+                // remove the last digit
+                last.removeLast()
+                // remove the whole digit
+                splitTemp.removeLast()
+                // add the new last number to the split one
+                splitTemp.append(last)
+            }
+        }
         // put the string back together
-        userInput = splitTemp.joined(separator: " ")
+        var joined = splitTemp.joined(separator: " ")
+        // add back an extra space if the last character is a operator
+        if let last = joined.last {
+            if let o = symbolToOperator(String(last)) {
+                if ButtonAction.operators.contains(o) {
+                    joined += " "
+                }
+            }
+        }
+        // update the input field
+        userInput = joined
     }
     
     // Reset the input string to nothing
@@ -97,15 +135,20 @@ class Conversions: ObservableObject {
     
     // Calculate what the awnser is right here
     func calculate(_ mode: CalcMode) -> String {
-        // TODO: Check for valid equation
-        
         // Numbers array and operators array
         var numbers: Array<Int> = []
         var operators: Array<ButtonAction> = []
         // separate the operators from the numbers
         let temp = userInput // "1 + 2 \n"
         let trimmed = temp.replacingOccurrences(of: "\n", with: "") // "1 + 2"
+        
+        // check valid equation
+        if !checkValidity(trimmed) {
+            return "ERROR"
+        }
+        
         let operatorsAndNumbers = trimmed.split(separator: " ") // ["1", "+" ,"2"]
+
         // Do the simple conversions
         operatorsAndNumbers.forEach({ on in // Operator or Number = on -> string value
             var number:Optional<Int> = nil // if the on is a number then save the number else make it null
@@ -123,39 +166,11 @@ class Conversions: ObservableObject {
                 numbers.append(number!)
             }
             else {    // Add to operators because it is that
-                switch on {
-                case "&":
-                    operators.append(.and)
-                    break
-                case "|":
-                    operators.append(.or)
-                    break
-                case "\u{22C0}":
-                    operators.append(.xor)
-                    break
-                case "~":
-                    operators.append(.not)
-                    break
-                case "\u{00BB}":
-                    operators.append(.rightShift)
-                    break
-                case "\u{00AB}":
-                    operators.append(.leftShift)
-                    break
-                case "\u{00D7}":
-                    operators.append(.multiply)
-                    break
-                case "\u{00F7}":
-                    operators.append(.divide)
-                    break
-                case "-":
-                    operators.append(.subtract)
-                    break
-                case "+":
-                    operators.append(.plus)
-                    break
-                default:
-                    break
+                if let option = symbolToOperator(String(on)) {
+                    operators.append(option)
+                }
+                else {
+                    print("ERROR >> Not an operator or a number")
                 }
             }
         })
@@ -167,12 +182,52 @@ class Conversions: ObservableObject {
         case .bin:
             return String(Int(doTheDecMath(operators, numbers), radix: 10)!, radix: 2)
         case .hex:
-            print(numbers)
             return String(Int(doTheDecMath(operators, numbers), radix: 16) ?? -1)
         }
     }
     
-    // TODO: The math is only for dec... so no other operations work yet like bin or hex
+    func symbolToOperator(_ on: String) -> Optional<ButtonAction> {
+        switch on {
+        case "&":
+            return .and
+        case "|":
+            return .or
+        case "\u{22C0}":
+            return .xor
+        case "~":
+            return .not
+        case "\u{00BB}":
+            return .rightShift
+        case "\u{00AB}":
+            return .leftShift
+        case "\u{00D7}":
+            return .multiply
+        case "\u{00F7}":
+            return .divide
+        case "-":
+            return .subtract
+        case "+":
+            return .plus
+        default:
+            return nil
+        }
+    }
+    
+    // TODO: Checks the equation to make sure it is in the correct format
+    func checkValidity(_ equation: String) -> Bool {
+        // create equation
+        // digits -> \d+
+        // number -> [~]?digits
+        // symbol -> [+-\u{00F7}\u{00D7}\u{00AB}\u{00BB}\u{22C0}|&]
+        // equation -> number[symbolnumber]+
+//        let regex = try! NSRegularExpression(pattern: "")
+//        print(equation, regex.matches(equation))
+        
+//        return regex.matches(equation)
+        return true
+    }
+    
+    // The math is only for dec... so no other operations work yet like bin or hex
     func doTheDecMath(_ operators: Array<ButtonAction>, _ numbers: Array<Int>) -> String {
         // take the lhs of the operations and the operations index
         var lhs = -1
@@ -269,5 +324,22 @@ class Conversions: ObservableObject {
         hex = String(Int(answer) ?? -1, radix: 16)
         bin = String(Int(answer) ?? -1, radix: 2)
         dec = answer
+    }
+}
+
+extension NSRegularExpression {
+    convenience init(_ pattern: String) {
+        do {
+            try self.init(pattern: pattern)
+        } catch {
+            preconditionFailure("Illegal regular expression: \(pattern).")
+        }
+    }
+}
+
+extension NSRegularExpression {
+    func matches(_ string: String) -> Bool {
+        let range = NSRange(location: 0, length: string.utf16.count)
+        return firstMatch(in: string, options: [], range: range) != nil
     }
 }

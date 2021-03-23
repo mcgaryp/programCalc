@@ -21,6 +21,7 @@ enum ButtonAction: CaseIterable, Hashable {
     case plus
     case equals
     case clear
+    case decimal
     case zero
     case one
     case two

@@ -47,6 +47,13 @@ class MyButtons: ObservableObject {
                 ButtonState("3", .three, .number, false),
                 ButtonState("minus", .subtract, .symbol, false)
             ]),
+//            ButtonGroup([
+//                ButtonState("&", .and, .symbol, false),
+//                ButtonState("0", .zero, .number, false),
+//                ButtonState(".", .decimal, .number, false),
+//                ButtonState("=", .equals, .symbol, false),
+//                ButtonState("+", .plus, .symbol, false)
+//            ])
         ]
     }
     

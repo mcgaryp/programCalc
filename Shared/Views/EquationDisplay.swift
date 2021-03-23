@@ -13,50 +13,65 @@ struct EquationDisplay: View {
     var calculatorMode: CalcMode
     
     var body: some View {
-        VStack {
-            HStack {
-                Spacer()
-                GeometryReader { geometry in
-                    ScrollView {
-                        ScrollViewReader { scroll in
-                            VStack {
-                                Spacer()
-                                ForEach(display.userHistory, id: \.self) { entry in
-                                    Text(entry.equation)
+        ZStack {
+            VStack {
+                HStack {
+                    Spacer()
+                    GeometryReader { geometry in
+                        ScrollView {
+                            ScrollViewReader { scroll in
+                                VStack {
+                                    Spacer()
+                                    ForEach(display.userHistory, id: \.self) { entry in
+                                        Text(entry.equation)
+                                            .multilineTextAlignment(.trailing)
+                                            .foregroundColor(.black)
+                                            .padding(.horizontal)
+                                            .padding(.bottom)
+                                            .frame(width: geometry.size.width, alignment: .bottomTrailing)
+                                    }
+                                    .onChange(of: display.userHistory, perform: { _ in
+                                        scroll.scrollTo(bottomId)
+                                    })
+                                    Text(display.userInput)
                                         .multilineTextAlignment(.trailing)
                                         .foregroundColor(.black)
                                         .padding(.horizontal)
                                         .padding(.bottom)
                                         .frame(width: geometry.size.width, alignment: .bottomTrailing)
+                                        .id(bottomId)
                                 }
-                                .onChange(of: display.userHistory, perform: { _ in
-                                    scroll.scrollTo(bottomId)
-                                })
-                                Text(display.userInput)
-                                    .multilineTextAlignment(.trailing)
-                                    .foregroundColor(.black)
-                                    .padding(.horizontal)
-                                    .padding(.bottom)
-                                    .frame(width: geometry.size.width, alignment: .bottomTrailing)
-                                    .id(bottomId)
                             }
+                            .frame(minHeight: geometry.size.height)
                         }
-                        .frame(minHeight: geometry.size.height)
+                        .background(Color.white)
+                        .cornerRadius(20)
                     }
-                    .background(Color.white)
-                    .cornerRadius(20)
+                    Spacer()
+                }
+                // The conversions
+                TextRow(text: "DEC", number: display.dec)
+                TextRow(text: "HEX", number: display.hex)
+                TextRow(text: "BIN", number: display.bin)
+            }
+            VStack(alignment: .leading) {
+                HStack(alignment: .top) {
+                    Button(action: display.clearHistory, label: {
+                        Text("Clear")
+                            .font(.caption)
+                            .padding(8)
+                            .background(Color.cadet)
+                            .foregroundColor(.white)
+                            .cornerRadius(20)
+                    })
+                    .padding(.leading)
+                    .padding(.top, 8)
+                    Spacer()
                 }
                 Spacer()
             }
-            // The conversions
-            TextRow(text: "DEC", number: display.dec)
-            TextRow(text: "HEX", number: display.hex)
-            TextRow(text: "BIN", number: display.bin)
         }
-        .frame(maxWidth: 500)
     }
-    
-    /// TODO: Create functions to interpret the displaystring and do calculations
 }
 
 struct TextRow: View {

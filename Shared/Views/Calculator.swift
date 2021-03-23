@@ -14,8 +14,7 @@ import SwiftUI
 // TODO: Not (inverse) operator, How to display this properly
 // TODO: Color red in light mode needs to be different tint... too bright
 // FIXME: Subtract only a charcter from a number
-// TODO: Check for not cool equations, equations that don't make sense
-//      1++3, 1/3-, and so on ERROR CHECKING
+// TODO: Check for not cool equations, equations that don't make sense 1++3, 1/3-, and so on ERROR CHECKING
 
 struct Calculator: View {
     @ObservedObject private var display: Conversions = Conversions()

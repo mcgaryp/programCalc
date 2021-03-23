@@ -11,17 +11,13 @@ import SwiftUI
 // TODO: Division... this need to be float conversions
 // TODO: Add decimal (point button)?
 // TODO: Add clear history
-// TODO: Hex basic calculations
-// TODO: Binary basic calculations
 // TODO: Not (inverse) operator, How to display this properly
 // TODO: Color red in light mode needs to be different tint... too bright
 // FIXME: Subtract only a charcter from a number
-// TODO: Check for not cool equations, equations that don't make sense
-//      1++3, 1/3-, and so on ERROR CHECKING
-// TODO: Decide on the length of the max binary number.
+// TODO: Check for not cool equations, equations that don't make sense 1++3, 1/3-, and so on ERROR CHECKING
 
 struct Calculator: View {
-    @StateObject private var display: Conversions = Conversions()
+    @ObservedObject private var display: Conversions = Conversions()
     @ObservedObject private var buttons: MyButtons = MyButtons()
     @State private var selectedMode:String = CalcMode.hex.rawValue
     
@@ -41,6 +37,7 @@ struct Calculator: View {
                         buttons.objectWillChange.send()
                         updateButtons(value: CalcMode(rawValue: value)!)
                     }
+                    .disabled(display.inCalculation)
                     .pickerStyle(SegmentedPickerStyle())
                     Spacer()
                 }

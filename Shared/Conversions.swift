@@ -16,6 +16,7 @@ class Conversions: ObservableObject {
     @Published var bin: String
     @Published var hex: String
     @Published var dec: String
+    @Published var inCalculation: Bool = false
     // Calculated answer
     private var answer: String = ""
     
@@ -61,6 +62,15 @@ class Conversions: ObservableObject {
             // reset the user input
             resetInput()
         }
+        checkLengthOfInput()
+    }
+    
+    func checkLengthOfInput() {
+        if userInput.isEmpty {
+            inCalculation = false
+        } else {
+            inCalculation = true
+        }
     }
     
     // Appropriately subtract numbers
@@ -82,6 +92,7 @@ class Conversions: ObservableObject {
     // Reset the input string to nothing
     func resetInput() -> Void {
         userInput = ""
+        checkLengthOfInput()
     }
     
     // Calculate what the awnser is right here

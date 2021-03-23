@@ -52,7 +52,7 @@ class Conversions: ObservableObject {
         if userInput.last == "\n" {
             // Calculate the input
             answer = calculate(mode)
-            // conver the anwset
+            // convert the answer
             convert(mode)
             // update the input
             userInput += "= \(answer)"
@@ -90,18 +90,28 @@ class Conversions: ObservableObject {
         
         // Numbers array and operators array
         var numbers: Array<Int> = []
-        var operators: Array<OperatorType> = []
+        var operators: Array<ButtonAction> = []
         // separate the operators from the numbers
         let temp = userInput // "1 + 2 \n"
         let trimmed = temp.replacingOccurrences(of: "\n", with: "") // "1 + 2"
         let operatorsAndNumbers = trimmed.split(separator: " ") // ["1", "+" ,"2"]
         // Do the simple conversions
         operatorsAndNumbers.forEach({ on in // Operator or Number = on -> string value
-            let number = Int(on) ?? nil // if the on is a number then save the number else make it null
+            var number:Optional<Int> = nil // if the on is a number then save the number else make it null
+            if mode == .bin {
+                number = Int(String(on), radix: 2) ?? nil
+            }
+            if mode == .hex {
+                number = Int(String(on), radix: 16) ?? nil
+            }
+            if mode == .dec {
+                number = Int(on) ?? nil
+            }
             // if a number then add to numbers
             if number != nil {
                 numbers.append(number!)
-            } else {    // Add to operators because it is that
+            }
+            else {    // Add to operators because it is that
                 switch on {
                 case "&":
                     operators.append(.and)
@@ -113,13 +123,13 @@ class Conversions: ObservableObject {
                     operators.append(.xor)
                     break
                 case "~":
-                    operators.append(.inverse)
+                    operators.append(.not)
                     break
                 case "\u{00BB}":
-                    operators.append(.shiftRight)
+                    operators.append(.rightShift)
                     break
                 case "\u{00AB}":
-                    operators.append(.shiftLeft)
+                    operators.append(.leftShift)
                     break
                 case "\u{00D7}":
                     operators.append(.multiply)
@@ -131,7 +141,7 @@ class Conversions: ObservableObject {
                     operators.append(.subtract)
                     break
                 case "+":
-                    operators.append(.add)
+                    operators.append(.plus)
                     break
                 default:
                     break
@@ -143,18 +153,20 @@ class Conversions: ObservableObject {
         switch mode {
         case .dec:
             return doTheDecMath(operators, numbers)
-        case .bin: // TODO: binary calc
-            return "0"
-        case .hex: // TODO: hex calc
-            return "0"
+        case .bin:
+            return String(Int(doTheDecMath(operators, numbers), radix: 10)!, radix: 2)
+        case .hex:
+            print(numbers)
+            return String(Int(doTheDecMath(operators, numbers), radix: 16) ?? -1)
         }
     }
     
     // TODO: The math is only for dec... so no other operations work yet like bin or hex
-    func doTheDecMath(_ operators: Array<OperatorType>, _ numbers: Array<Int>) -> String {
+    func doTheDecMath(_ operators: Array<ButtonAction>, _ numbers: Array<Int>) -> String {
         // take the lhs of the operations and the operations index
         var lhs = -1
         var operatorIndex = -1
+            
         // loop through the numbers
         numbers.forEach({ number in // [1, 2] [+]
             if operatorIndex < 0 {
@@ -165,7 +177,7 @@ class Conversions: ObservableObject {
             } else {
                 // what is the operator? go to the right function.
                 switch operators[operatorIndex] {
-                case .add:
+                case .plus:
                     // Add function
                     lhs += number
                     break
@@ -181,7 +193,7 @@ class Conversions: ObservableObject {
                     // divide function
                     lhs = lhs / number
                     break
-                case .inverse:
+                case .not:
                     // TODO: Inverse function
                     lhs = ~lhs
                     break
@@ -193,17 +205,19 @@ class Conversions: ObservableObject {
                     // And function
                     lhs &= number
                     break
-                case .xor:
+                case .xor: //not working in BIN
                     // xor function
                     lhs = lhs ^ number
                     break
-                case .shiftLeft:
+                case .leftShift:
                     // Shift left function
                     lhs = lhs << number
                     break
-                case .shiftRight:
+                case .rightShift:
                     // Shift Right function
                     lhs = lhs >> number
+                    break
+                default:
                     break
                 }
                 operatorIndex += 1
@@ -212,6 +226,7 @@ class Conversions: ObservableObject {
         
         return String(lhs)
     }
+    
     
     func convert(_ mode: CalcMode) -> Void {
         switch mode {
@@ -229,7 +244,7 @@ class Conversions: ObservableObject {
     
     func hexTo() {
         bin = String(Int(answer, radix: 16) ?? -1, radix: 2)
-        dec = String(Int64(answer, radix: 16) ?? -1)
+        dec = String(Int(answer, radix: 16) ?? -1)
         hex = answer
     }
     
@@ -241,7 +256,7 @@ class Conversions: ObservableObject {
     
     func decTo() {
         hex = String(Int(answer) ?? -1, radix: 16)
-        bin = String(Int64(answer) ?? -1, radix: 2)
+        bin = String(Int(answer) ?? -1, radix: 2)
         dec = answer
     }
 }

@@ -553,7 +553,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Programming Calculator.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = KJX3YL6938;
+				DEVELOPMENT_TEAM = 7B82QUU22R;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -561,7 +561,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Po.Programming-Calculator";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Programming-Calculator";
 				PRODUCT_NAME = "Programming Calculator";
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = YES;
@@ -577,7 +577,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Programming Calculator.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = KJX3YL6938;
+				DEVELOPMENT_TEAM = 7B82QUU22R;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -585,7 +585,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Po.Programming-Calculator";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Programming-Calculator";
 				PRODUCT_NAME = "Programming Calculator";
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = YES;

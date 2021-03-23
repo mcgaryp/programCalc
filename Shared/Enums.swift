@@ -69,15 +69,3 @@ enum CalcMode: String, CaseIterable, Identifiable {
     var id: String{self.rawValue}
 }
 
-enum OperatorType {
-    case shiftLeft
-    case shiftRight
-    case inverse
-    case xor
-    case or
-    case and
-    case multiply
-    case divide
-    case subtract
-    case add
-}

@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// TODO: Make bench test
+// TODO: Make app icon image
 // TODO: Check for not cool equations, equations that don't make sense 1++3, 1/3-, and so on ERROR CHECKING
 
 struct Calculator: View {

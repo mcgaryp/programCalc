@@ -77,6 +77,7 @@ class Conversions: ObservableObject {
         hex = "0"
         bin = "0"
         userInput = ""
+        checkLengthOfInput()
     }
     
     // Checks the length of the input string to let the calculation in display or not
@@ -126,6 +127,8 @@ class Conversions: ObservableObject {
         }
         // update the input field
         userInput = joined
+        
+        checkLengthOfInput()
     }
     
     // Reset the input string to nothing

@@ -10,9 +10,6 @@ import SwiftUI
 // TODO: Make bench test
 // TODO: Make app icon image
 // TODO: Check for not cool equations, equations that don't make sense 1++3, 1/3-, and so on ERROR CHECKING
-// FIXME: Clear button erase the user input box as well
-// FIXME: Application is only to use portait mode
-// FIXME: Hex calculator is messed up. It doesn't multiply correctly, Check other simple equations
 // TODO: Solve the not operations....
 // TODO: Define the number of binary 0s are in each number, for hex, dec, and bin
 

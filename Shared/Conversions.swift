@@ -76,6 +76,7 @@ class Conversions: ObservableObject {
         dec = "0"
         hex = "0"
         bin = "0"
+        userInput = ""
     }
     
     // Checks the length of the input string to let the calculation in display or not
@@ -182,7 +183,7 @@ class Conversions: ObservableObject {
         case .bin:
             return String(Int(doTheDecMath(operators, numbers), radix: 10)!, radix: 2)
         case .hex:
-            return String(Int(doTheDecMath(operators, numbers), radix: 16) ?? -1)
+            return String(Int(doTheDecMath(operators, numbers), radix: 10)!, radix: 16)
         }
     }
     

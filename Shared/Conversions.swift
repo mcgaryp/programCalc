@@ -387,9 +387,13 @@ extension NSRegularExpression {
 
 
 // The entry of the user history
-class Entry: ObservableObject, Identifiable, Codable {
+struct Entry: Identifiable, Codable, Hashable {
+    static func == (lhs: Entry, rhs: Entry) -> Bool {
+        return (lhs.id == rhs.id)
+    }
+    
     // TODO: Comment
-    @Published var equation: String // current format "1+2\n=3"
+    var equation: String // current format "1+2\n=3"
     var id: UUID
     
     // TODO: Comments
@@ -398,7 +402,7 @@ class Entry: ObservableObject, Identifiable, Codable {
     }
     
     // TODO: Comments
-    public required init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)

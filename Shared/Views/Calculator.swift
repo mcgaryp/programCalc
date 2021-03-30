@@ -9,7 +9,7 @@ import SwiftUI
 
 // TODO: Make bench test
 // TODO: Check for not cool equations, equations that don't make sense 1++3, 1/3-, and so on ERROR CHECKING
-// TODO: Add history caching
+// TODO: Division
 
 struct Calculator: View {
     @ObservedObject private var display: Conversions = Conversions()
@@ -202,7 +202,7 @@ struct Calculator: View {
     }
 }
 
-// TODO: Comments
+// Creates the view for every row of buttons
 struct ButtonRow: View {
     var callback: (ButtonAction) -> Void
     var group: ButtonGroup
@@ -218,7 +218,7 @@ struct ButtonRow: View {
     }
 }
 
-// TODO: Comments
+// Creates the actual physical button
 struct MyButton: View {
     var callback: (ButtonAction) -> Void
     var button: ButtonState
@@ -263,25 +263,6 @@ struct MyButton: View {
             }
         })
         .disabled(button.disabled)
-    }
-}
-
-// TODO: Comments
-struct ButtonData: Hashable {
-    var disabled: Bool
-    let text: String
-    let action: ButtonAction
-    let type: ButtonType
-    
-    init(_ text: String, _ action: ButtonAction, _ type: ButtonType, _ disabled: Bool) {
-        self.text = text
-        self.action = action
-        self.disabled = disabled
-        self.type = type
-    }
-    
-    mutating func updateDisabled(b: Bool) {
-        disabled = b
     }
 }
 

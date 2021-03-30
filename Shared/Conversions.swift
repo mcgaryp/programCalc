@@ -38,7 +38,7 @@ class Conversions: ObservableObject {
         self.userHistory = []
     }
     
-    // TODO: Comment
+    // Saves the user history to the device
     func save() {
         if let encoded = try? JSONEncoder().encode(userHistory) {
             UserDefaults.standard.set(encoded, forKey: Self.saveKey)
@@ -74,7 +74,7 @@ class Conversions: ObservableObject {
         checkLengthOfInput()
     }
     
-    // TODO: Comments
+    // Clear the history of the user and reset the display
     func clearHistory() {
         userHistory.removeAll(keepingCapacity: false)
         save()
@@ -206,7 +206,7 @@ class Conversions: ObservableObject {
         }
     }
     
-    // TODO: Comments
+    // Converts the Symbols to the operations
     func symbolToOperator(_ on: String) -> Optional<ButtonAction> {
         switch on {
         case "&":
@@ -329,7 +329,7 @@ class Conversions: ObservableObject {
         return String(lhs)
     }
     
-    // TODO: Comments
+    // Decided which mode we are in and call the right converter function
     func convert(_ mode: CalcMode) -> Void {
         switch mode {
         case .bin:
@@ -344,21 +344,21 @@ class Conversions: ObservableObject {
         }
     }
     
-    // TODO: Comments
+    // Converts from hexidecimal to...
     func hexTo() {
         bin = String(Int(answer ?? "", radix: 16) ?? -1, radix: 2)
         dec = String(Int(answer ?? "", radix: 16) ?? -1)
         hex = answer ?? ""
     }
     
-    // TODO: Comments
+    // Converts from binary to...
     func binTo() {
         dec = String(Int(answer ?? "", radix: 2) ?? -1)
         hex = String(Int(answer ?? "", radix: 2) ?? -1, radix: 16)
         bin = answer ?? ""
     }
     
-    // TODO: Comments
+    // Converts from decimal to...
     func decTo() {
         hex = String(Int(answer ?? "") ?? -1, radix: 16)
         bin = String(Int(answer ?? "") ?? -1, radix: 2)
@@ -366,7 +366,7 @@ class Conversions: ObservableObject {
     }
 }
 
-// TODO: Comments
+// Extension for regular expression
 extension NSRegularExpression {
     convenience init(_ pattern: String) {
         do {
@@ -377,7 +377,7 @@ extension NSRegularExpression {
     }
 }
 
-// TODO: Comments
+// Extension regular expression
 extension NSRegularExpression {
     func matches(_ string: String) -> Bool {
         let range = NSRange(location: 0, length: string.utf16.count)
@@ -388,28 +388,23 @@ extension NSRegularExpression {
 
 // The entry of the user history
 struct Entry: Identifiable, Codable, Hashable {
-    static func == (lhs: Entry, rhs: Entry) -> Bool {
-        return (lhs.id == rhs.id)
-    }
-    
-    // TODO: Comment
+    // The variable the user used
     var equation: String // current format "1+2\n=3"
     var id: UUID
     
-    // TODO: Comments
+    // Enumeration for the coding keys
     enum CodingKeys: CodingKey {
         case id, equation
     }
     
-    // TODO: Comments
+    // Function used to decode the entry from json
     public init(from decoder: Decoder) throws {
-        
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(UUID.self, forKey: .id)
         equation = try container.decode(String.self, forKey: .equation)
     }
     
-    // TODO: Comments
+    // Function used to encode the entry into json
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)

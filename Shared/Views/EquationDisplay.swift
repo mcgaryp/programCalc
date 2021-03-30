@@ -33,6 +33,9 @@ struct EquationDisplay: View {
                                     .onChange(of: display.userHistory, perform: { _ in
                                         scroll.scrollTo(bottomId)
                                     })
+                                    .onChange(of: display.userInput, perform: { _ in
+                                        scroll.scrollTo(bottomId)
+                                    })
                                     Text(display.userInput)
                                         .multilineTextAlignment(.trailing)
                                         .foregroundColor(.black)
@@ -51,7 +54,7 @@ struct EquationDisplay: View {
                 }
                 // The conversions
                 TextRow(text: "DEC", number: display.dec)
-                TextRow(text: "HEX", number: display.hex)
+                TextRow(text: "HEX", number: display.hex.uppercased())
                 TextRow(text: "BIN", number: display.bin)
             }
             VStack(alignment: .leading) {

@@ -19,13 +19,12 @@ class Conversions: ObservableObject {
     // Boolean used to tell if the user is in the middle of a calculation
     @Published var inCalculation: Bool = false
     // Calculated answer
-    private var answer: String = ""
+    private var answer: String? = ""
     
     // The entry of the user history
     struct Entry: Identifiable, Hashable {
         var id: UUID
         var equation: String // current format "1+2\n=3"
-        // TODO: answer string?
         
         // Init for structure
         init(_ e: String) {
@@ -62,15 +61,20 @@ class Conversions: ObservableObject {
             // convert the answer
             convert(mode)
             // update the input
-            userInput += answer != "-1" ? "= \(answer)" : "ERROR"
+            if let a = answer {
+                userInput += "= \(a)"
+            } else {
+                userInput += "ERROR"
+            }
             // Add to history
-            userHistory.append(Entry(userInput))
+            userHistory.append(Entry(userInput.uppercased()))
             // reset the user input
             resetInput()
         }
         checkLengthOfInput()
     }
     
+    // TODO: Comments
     func clearHistory() {
         userHistory.removeAll(keepingCapacity: false)
         dec = "0"
@@ -78,6 +82,8 @@ class Conversions: ObservableObject {
         bin = "0"
         userInput = ""
         checkLengthOfInput()
+        let temp = 8
+        print("\(String(Int64(~temp), radix: 2)), \(String(Int64(temp), radix: 2))", ~temp)
     }
     
     // Checks the length of the input string to let the calculation in display or not
@@ -152,6 +158,8 @@ class Conversions: ObservableObject {
         }
         
         let operatorsAndNumbers = trimmed.split(separator: " ") // ["1", "+" ,"2"]
+        var count = 0
+        var hasLeading = false
 
         // Do the simple conversions
         operatorsAndNumbers.forEach({ on in // Operator or Number = on -> string value
@@ -170,6 +178,9 @@ class Conversions: ObservableObject {
                 numbers.append(number!)
             }
             else {    // Add to operators because it is that
+                if count == 0 {
+                    hasLeading = true
+                }
                 if let option = symbolToOperator(String(on)) {
                     operators.append(option)
                 }
@@ -177,19 +188,26 @@ class Conversions: ObservableObject {
                     print("ERROR >> Not an operator or a number")
                 }
             }
+            count += 1
         })
+        
+        // if there were no numbers return error
+        if numbers.isEmpty {
+            return "ERROR"
+        }
         
         // based on the mode in Do some math
         switch mode {
         case .dec:
-            return doTheDecMath(operators, numbers)
+            return doTheDecMath(operators, numbers, hasLeading)
         case .bin:
-            return String(Int(doTheDecMath(operators, numbers), radix: 10)!, radix: 2)
+            return String(Int(doTheDecMath(operators, numbers, hasLeading), radix: 10)!, radix: 2)
         case .hex:
-            return String(Int(doTheDecMath(operators, numbers), radix: 10)!, radix: 16)
+            return String(Int(doTheDecMath(operators, numbers, hasLeading), radix: 10)!, radix: 16)
         }
     }
     
+    // TODO: Comments
     func symbolToOperator(_ on: String) -> Optional<ButtonAction> {
         switch on {
         case "&":
@@ -232,19 +250,35 @@ class Conversions: ObservableObject {
     }
     
     // The math is only for dec... so no other operations work yet like bin or hex
-    func doTheDecMath(_ operators: Array<ButtonAction>, _ numbers: Array<Int>) -> String {
+    func doTheDecMath(_ operators: Array<ButtonAction>, _ numbers: Array<Int>, _ hasLeading: Bool) -> String {
         // take the lhs of the operations and the operations index
         var lhs = -1
         var operatorIndex = -1
             
         // loop through the numbers
-        numbers.forEach({ number in // [1, 2] [+]
+        numbers.forEach({ n in // [1, 2] [+]
+            var number = n
             if operatorIndex < 0 {
                 // first time through the loop set the number to the lhs
                 lhs = number
                 // lets start to look at the operators after this loop
                 operatorIndex = 0
+                // if there is an operator
+                if hasLeading {
+                    if operators[operatorIndex] == .subtract {
+                        lhs = -lhs
+                    }
+                    if operators[operatorIndex] == .not {
+                        lhs = ~lhs
+                    }
+                    operatorIndex += 1
+                }
             } else {
+                if operatorIndex + 1 < operators.count {
+                    if operators[operatorIndex + 1] == .not {
+                        number = ~number
+                    }
+                }
                 // what is the operator? go to the right function.
                 switch operators[operatorIndex] {
                 case .plus:
@@ -264,7 +298,6 @@ class Conversions: ObservableObject {
                     lhs = lhs / number
                     break
                 case .not:
-                    // TODO: Inverse function
                     lhs = ~lhs
                     break
                 case .or:
@@ -297,7 +330,7 @@ class Conversions: ObservableObject {
         return String(lhs)
     }
     
-    
+    // TODO: Comments
     func convert(_ mode: CalcMode) -> Void {
         switch mode {
         case .bin:
@@ -312,25 +345,29 @@ class Conversions: ObservableObject {
         }
     }
     
+    // TODO: Comments
     func hexTo() {
-        bin = String(Int(answer, radix: 16) ?? -1, radix: 2)
-        dec = String(Int(answer, radix: 16) ?? -1)
-        hex = answer
+        bin = String(Int(answer ?? "", radix: 16) ?? -1, radix: 2)
+        dec = String(Int(answer ?? "", radix: 16) ?? -1)
+        hex = answer ?? ""
     }
     
+    // TODO: Comments
     func binTo() {
-        dec = String(Int(answer, radix: 2) ?? -1)
-        hex = String(Int(answer, radix: 2) ?? -1, radix: 16)
-        bin = answer
+        dec = String(Int(answer ?? "", radix: 2) ?? -1)
+        hex = String(Int(answer ?? "", radix: 2) ?? -1, radix: 16)
+        bin = answer ?? ""
     }
     
+    // TODO: Comments
     func decTo() {
-        hex = String(Int(answer) ?? -1, radix: 16)
-        bin = String(Int(answer) ?? -1, radix: 2)
-        dec = answer
+        hex = String(Int(answer ?? "") ?? -1, radix: 16)
+        bin = String(Int(answer ?? "") ?? -1, radix: 2)
+        dec = answer ?? ""
     }
 }
 
+// TODO: Comments
 extension NSRegularExpression {
     convenience init(_ pattern: String) {
         do {
@@ -341,6 +378,7 @@ extension NSRegularExpression {
     }
 }
 
+// TODO: Comments
 extension NSRegularExpression {
     func matches(_ string: String) -> Bool {
         let range = NSRange(location: 0, length: string.utf16.count)

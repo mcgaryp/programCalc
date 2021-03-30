@@ -9,7 +9,7 @@ import Foundation
 
 class Conversions: ObservableObject {
     // Array of past values and calculations of the user
-    @Published var userHistory: Array<Entry> = []
+    @Published var userHistory: Array<Entry>
     // Current input and calculation determined by the user
     @Published var userInput: String = ""
     // values displayed of the answer in hex, dec, or binary
@@ -20,30 +20,29 @@ class Conversions: ObservableObject {
     @Published var inCalculation: Bool = false
     // Calculated answer
     private var answer: String? = ""
-    
-    // The entry of the user history
-    struct Entry: Identifiable, Hashable {
-        var id: UUID
-        var equation: String // current format "1+2\n=3"
-        
-        // Init for structure
-        init(_ e: String) {
-            equation = e
-            id = UUID()
-        }
-        
-        // Get function
-        func getEquation() -> String {
-            return self.equation
-        }
-    
-    }
+    // Static key to save data and retrieve it
+    static let saveKey = "UserHistory"
     
     // Initializer for class
     init() {
         bin = "0"
         hex = "0"
         dec = "0"
+        
+        if let data = UserDefaults.standard.data(forKey: Self.saveKey) {
+            if let decoded = try? JSONDecoder().decode([Entry].self, from: data) {
+                self.userHistory = decoded
+                return
+            }
+        }
+        self.userHistory = []
+    }
+    
+    // TODO: Comment
+    func save() {
+        if let encoded = try? JSONEncoder().encode(userHistory) {
+            UserDefaults.standard.set(encoded, forKey: Self.saveKey)
+        }
     }
     
     // Update string of the current equation the user is creating
@@ -68,6 +67,7 @@ class Conversions: ObservableObject {
             }
             // Add to history
             userHistory.append(Entry(userInput.uppercased()))
+            save()
             // reset the user input
             resetInput()
         }
@@ -77,13 +77,12 @@ class Conversions: ObservableObject {
     // TODO: Comments
     func clearHistory() {
         userHistory.removeAll(keepingCapacity: false)
+        save()
         dec = "0"
         hex = "0"
         bin = "0"
         userInput = ""
         checkLengthOfInput()
-        let temp = 8
-        print("\(String(Int64(~temp), radix: 2)), \(String(Int64(temp), radix: 2))", ~temp)
     }
     
     // Checks the length of the input string to let the calculation in display or not
@@ -383,5 +382,44 @@ extension NSRegularExpression {
     func matches(_ string: String) -> Bool {
         let range = NSRange(location: 0, length: string.utf16.count)
         return firstMatch(in: string, options: [], range: range) != nil
+    }
+}
+
+
+// The entry of the user history
+class Entry: ObservableObject, Identifiable, Codable {
+    // TODO: Comment
+    @Published var equation: String // current format "1+2\n=3"
+    var id: UUID
+    
+    // TODO: Comments
+    enum CodingKeys: CodingKey {
+        case id, equation
+    }
+    
+    // TODO: Comments
+    public required init(from decoder: Decoder) throws {
+        
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        equation = try container.decode(String.self, forKey: .equation)
+    }
+    
+    // TODO: Comments
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(equation, forKey: .equation)
+    }
+    
+    // Init for structure
+    init(_ e: String) {
+        equation = e
+        id = UUID()
+    }
+    
+    // Get function
+    func getEquation() -> String {
+        return self.equation
     }
 }

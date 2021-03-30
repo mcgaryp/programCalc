@@ -202,6 +202,7 @@ struct Calculator: View {
     }
 }
 
+// TODO: Comments
 struct ButtonRow: View {
     var callback: (ButtonAction) -> Void
     var group: ButtonGroup
@@ -217,6 +218,7 @@ struct ButtonRow: View {
     }
 }
 
+// TODO: Comments
 struct MyButton: View {
     var callback: (ButtonAction) -> Void
     var button: ButtonState
@@ -264,6 +266,7 @@ struct MyButton: View {
     }
 }
 
+// TODO: Comments
 struct ButtonData: Hashable {
     var disabled: Bool
     let text: String

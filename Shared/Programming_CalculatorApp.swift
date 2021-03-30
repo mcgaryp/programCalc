@@ -15,7 +15,6 @@ struct Programming_CalculatorApp: App {
     
     init() {
         // configure library
-        
     }
     
     var body: some Scene {
@@ -35,10 +34,6 @@ struct Programming_CalculatorApp: App {
                 print("Something new added by apple")
             }
         }
-    }
-    
-    func configureAppDelegate() {
-        
     }
 }
 

@@ -47,7 +47,16 @@ class Conversions: ObservableObject {
     
     // Update string of the current equation the user is creating
     func updateDisplayString(_ str: String, mode: CalcMode) -> Void {
-        userInput += str
+        // if the first input is a operator then add a zero first
+        if userInput == "" && symbolToOperator(str.replacingOccurrences(of: " ", with: "")) != nil {
+            userInput += "0"
+        }
+        // add the input from the key pad
+        if str == " - " && userInput.last == " " {
+            userInput += "-"
+        } else {
+            userInput += str
+        }
         // if the user selects = operator
         if userInput.last == "\n" {
             // the user only entered equals... do nothing

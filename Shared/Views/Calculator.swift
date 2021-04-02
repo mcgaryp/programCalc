@@ -9,12 +9,18 @@ import SwiftUI
 
 // TODO: Make bench test
 // TODO: Add ~ logic
-// TODO: Add floating point Division
+// TODO: Add Floating point Division
 
 struct Calculator: View {
     @ObservedObject private var display: Conversions = Conversions()
     @ObservedObject private var buttons: MyButtons = MyButtons()
-    @State var selectedMode:String
+    @State var selectedMode: String = CalcMode.dec.rawValue
+    
+    init() {
+        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor.init(white: 255, alpha: 0.2)
+        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.white], for: .normal)
+    }
     
     var body: some View {
         ZStack {
@@ -268,7 +274,7 @@ struct MyButton: View {
 
 struct Buttons_Previews: PreviewProvider {
     static var previews: some View {
-        Calculator(selectedMode: CalcMode.hex.rawValue)
+        Calculator()
             .preferredColorScheme(.dark)
     }
 }

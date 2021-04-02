@@ -152,7 +152,7 @@ class Conversions: ObservableObject {
         let trimmed = temp.replacingOccurrences(of: "\n", with: "") // "1 + 2"
         
         // check valid equation
-        if !checkValidity(trimmed) {
+        if !checkValidity(trimmed.replacingOccurrences(of: " ", with: "")) {
             return "ERROR"
         }
         
@@ -241,11 +241,26 @@ class Conversions: ObservableObject {
         // number -> [~]?digits
         // symbol -> [+-\u{00F7}\u{00D7}\u{00AB}\u{00BB}\u{22C0}|&]
         // equation -> number[symbolnumber]+
-//        let regex = try! NSRegularExpression(pattern: "")
+//        let regex = try! NSRegularExpression(pattern: "([0-F]+)??[+|-|\u{00F7}|\u{00D7}|\u{00AB}|\u{00BB}|\u{22C0}|&|\\|]??(~|-)??([0-F]+)+?")
+        let str = "([0-F]+)??[+|-|\u{00F7}|\u{00D7}|\u{00AB}|\u{00BB}|\u{22C0}|&|\\|]??(~|-)??([0-F]+)+?"
 //        print(equation, regex.matches(equation))
-        
-//        return regex.matches(equation)
-        return true
+        let results = matches(for: str, in: equation)
+        return results.joined() == equation
+    }
+    
+    func matches(for regex: String, in text: String) -> [String] {
+
+        do {
+            let regex = try NSRegularExpression(pattern: regex)
+            let results = regex.matches(in: text,
+                                        range: NSRange(text.startIndex..., in: text))
+            return results.map {
+                String(text[Range($0.range, in: text)!])
+            }
+        } catch let error {
+            print("invalid regex: \(error.localizedDescription)")
+            return []
+        }
     }
     
     // The math is only for dec... so no other operations work yet like bin or hex
@@ -367,23 +382,23 @@ class Conversions: ObservableObject {
 }
 
 // Extension for regular expression
-extension NSRegularExpression {
-    convenience init(_ pattern: String) {
-        do {
-            try self.init(pattern: pattern)
-        } catch {
-            preconditionFailure("Illegal regular expression: \(pattern).")
-        }
-    }
-}
-
-// Extension regular expression
-extension NSRegularExpression {
-    func matches(_ string: String) -> Bool {
-        let range = NSRange(location: 0, length: string.utf16.count)
-        return firstMatch(in: string, options: [], range: range) != nil
-    }
-}
+//extension NSRegularExpression {
+//    convenience init(_ pattern: String) {
+//        do {
+//            try self.init(pattern: pattern)
+//        } catch {
+//            preconditionFailure("Illegal regular expression: \(pattern).")
+//        }
+//    }
+//}
+//
+//// Extension regular expression
+//extension NSRegularExpression {
+//    func matches(_ string: String) -> Bool {
+//        let range = NSRange(location: 0, length: string.utf16.count)
+//        return firstMatch(in: string, options: [], range: range) != nil
+//    }
+//}
 
 
 // The entry of the user history

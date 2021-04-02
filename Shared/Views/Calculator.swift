@@ -8,13 +8,13 @@
 import SwiftUI
 
 // TODO: Make bench test
-// TODO: Check for not cool equations, equations that don't make sense 1++3, 1/3-, and so on ERROR CHECKING
-// TODO: Division
+// TODO: Add ~ logic
+// TODO: Add floating point Division
 
 struct Calculator: View {
     @ObservedObject private var display: Conversions = Conversions()
     @ObservedObject private var buttons: MyButtons = MyButtons()
-    @State private var selectedMode:String = CalcMode.hex.rawValue
+    @State var selectedMode:String
     
     var body: some View {
         ZStack {
@@ -48,9 +48,9 @@ struct Calculator: View {
                         Spacer()
                         MyButton(callback: display, button: ButtonState("&", .and, .symbol, false))
                         MyButton(callback: display, button: ButtonState("0", .zero, .number, false))
-                            .frame(width: geometry.size.width * 0.37)
+                            .frame(width: geometry.size.width * 0.555)
                         MyButton(callback: display, button: ButtonState("equal", .equals, .symbol, false))
-                        MyButton(callback: display, button: ButtonState("plus", .plus, .symbol, false))
+//                        MyButton(callback: display, button: ButtonState("plus", .plus, .symbol, false)) TODO: Add Back
                         Spacer()
                     }
                 }
@@ -268,7 +268,7 @@ struct MyButton: View {
 
 struct Buttons_Previews: PreviewProvider {
     static var previews: some View {
-        Calculator()
+        Calculator(selectedMode: CalcMode.hex.rawValue)
             .preferredColorScheme(.dark)
     }
 }

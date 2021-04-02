@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct ContentView: View {
+    
     var body: some View {
-        Calculator()
+        Calculator(selectedMode: CalcMode.dec.rawValue)
     }
+    
+    
 }
 
 struct ContentView_Previews: PreviewProvider {

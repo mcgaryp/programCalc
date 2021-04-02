@@ -72,7 +72,7 @@ enum ButtonType {
 }
 
 // The different calculator modes
-enum CalcMode: String, CaseIterable, Identifiable {
+enum CalcMode: String, CaseIterable, Identifiable, Codable {
     case bin, hex, dec
     
     var id: String{self.rawValue}

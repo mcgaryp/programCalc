@@ -23,17 +23,29 @@ struct EquationDisplay: View {
                                 VStack {
                                     Spacer()
                                     ForEach(display.userHistory, id: \.self) { entry in
-                                        Text(entry.equation)
-                                            .multilineTextAlignment(.trailing)
-                                            .foregroundColor(.black)
-                                            .padding(.horizontal)
-                                            .padding(.bottom)
-                                            .frame(width: geometry.size.width, alignment: .bottomTrailing)
+                                        HStack {
+                                            Text(entry.mode.rawValue.uppercased())
+                                                .padding(.horizontal)
+                                                .padding(.bottom)
+                                                .foregroundColor(.cadet)
+                                                .opacity(0.5)
+                                            Spacer()
+                                            Text(entry.equation)
+                                                .multilineTextAlignment(.trailing)
+                                                .foregroundColor(.black)
+                                                .padding(.horizontal)
+                                                .padding(.bottom)
+//                                                .frame(width: geometry.size.width, alignment: .bottomTrailing)
+                                        }
+                                        Divider()
                                     }
                                     .onChange(of: display.userHistory, perform: { _ in
                                         scroll.scrollTo(bottomId)
                                     })
                                     .onChange(of: display.userInput, perform: { _ in
+                                        scroll.scrollTo(bottomId)
+                                    })
+                                    .onAppear(perform: {
                                         scroll.scrollTo(bottomId)
                                     })
                                     Text(display.userInput)
@@ -66,6 +78,7 @@ struct EquationDisplay: View {
                             .background(Color.cadet)
                             .foregroundColor(.white)
                             .cornerRadius(20)
+                            .opacity(0.8)
                     })
                     .padding(.leading)
                     .padding(.top, 8)

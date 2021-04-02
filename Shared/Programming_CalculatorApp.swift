@@ -13,10 +13,6 @@ struct Programming_CalculatorApp: App {
     @Environment(\.scenePhase) var scenePhase
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
-    init() {
-        // configure library
-    }
-    
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -24,14 +20,18 @@ struct Programming_CalculatorApp: App {
         .onChange(of: scenePhase) { phase in
             switch phase {
             case .active:
-                print("Active")
+//                print("Active")
+                break
             case .inactive:
-                print("Inactive")
+                break
+//                print("Inactive")
             case .background:
-                print("Background")
+//                print("Background")
+                break
             @unknown default:
                 // if something is happening to go into the phase this is were you would need to apply
-                print("Something new added by apple")
+                print("Something new added by Apple")
+                break
             }
         }
     }
